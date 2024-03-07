@@ -1,0 +1,6 @@
+﻿.idea/
+.vscode/
+.vs/
+
+api/AspAPI/bin/
+api/AspAPI/obj/
