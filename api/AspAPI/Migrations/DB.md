@@ -1,3 +1,8 @@
+## Scaffolding DbContext and Models
+```bash
+dotnet ef dbcontext scaffold "YourConnectionString" Pomelo.EntityFrameworkCore.MySql -o Models
+```
+
 ﻿## Generation migrations
 ```bash
 dotnet ef migrations add InitialCreate
