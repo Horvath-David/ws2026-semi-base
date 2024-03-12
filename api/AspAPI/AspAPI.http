@@ -1,6 +1,6 @@
 @AspAPI_HostAddress = http://localhost:5239
 
-GET {{AspAPI_HostAddress}}/weatherforecast/
+GET {{AspAPI_HostAddress}}/
 Accept: application/json
 
 ###

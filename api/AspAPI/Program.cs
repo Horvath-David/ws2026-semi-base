@@ -1,22 +1,13 @@
 using AspAPI;
+using AspAPI.Models;
+
+// ##### SERVER SETUP #####
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
-var db = new MyDbContext();
-
-// Create
-Console.WriteLine("Inserting a new blog");
-db.Add(new Blog { Url = "http://blogs.msdn.com/adonet" });
-db.SaveChanges();
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -24,33 +15,20 @@ if (app.Environment.IsDevelopment()) {
 
 app.UseHttpsRedirection();
 
-var summaries = new[] {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+// ##### GLOBALS #####
 
-app.MapGet("/weatherforecast", () => {
-        var forecast = Enumerable.Range(1, 3).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+var db = new SkillsContext();
+const string welcomeMessage = "AspAPI - EuroSkills BaseProject v0.0.1";
 
-app.MapGet("/db-test", () => {
-    var blog = db.Blogs
-        .OrderBy(b => b.BlogId)
-        .First();
-    return blog;
+// ##### ENDPOINTS & UTILS #####
+
+app.MapGet("/", () => new WelcomeResponse {
+    Message = welcomeMessage
 });
 
-app.Run();
+app.MapGet("/db-test", () =>
+    db.ProgrammingLanguages
+        .OrderBy(x => x.ReleaseDate)
+);
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary) {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+app.Run();
