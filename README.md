@@ -13,8 +13,6 @@ dotnet tool install --global dotnet-ef
 - Desktop development with C++ Visual Studio workload, MSVC VS 2022 Build tools + C++ CMake tools for Windows komponensek
 
 ## IDE
-### Rider (ha megoldható)
-- [One Dark color scheme](https://plugins.jetbrains.com/plugin/11938-one-dark-theme)
 
 ### VSCode
 - [Flutter](https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter), [Dart](https://marketplace.visualstudio.com/items?itemName=Dart-Code.dart-code) bővítmények (UI)
@@ -22,3 +20,5 @@ dotnet tool install --global dotnet-ef
 - [SQLTools](https://marketplace.visualstudio.com/items?itemName=mtxr.sqltools) bővítmény, [MySQL driver](https://marketplace.visualstudio.com/items?itemName=mtxr.sqltools-driver-mysql)
 - [One Dark Pro](https://marketplace.visualstudio.com/items?itemName=zhuangtongfa.Material-theme) color scheme
 
+### JetBrains Rider (ha megoldható)
+- [One Dark color scheme](https://plugins.jetbrains.com/plugin/11938-one-dark-theme)
