@@ -18,7 +18,7 @@ app.UseHttpsRedirection();
 // ##### GLOBALS #####
 
 var db = new SkillsContext();
-const string welcomeMessage = "AspAPI - EuroSkills BaseProject v0.0.1";
+const string welcomeMessage = "AspAPI - WorldSkills 2026 BaseProject v0.0.1";
 
 // ##### ENDPOINTS & UTILS #####
 
