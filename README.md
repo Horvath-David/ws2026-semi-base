@@ -12,7 +12,7 @@ dotnet tool install --global dotnet-ef
 
 ## UI
 
-- NodeJS: [útmutató](https://docs.flutter.dev/get-started/install/windows/desktop?tab=download#install-the-flutter-sdk)
+- NodeJS, pnpm
 
 ## IDE
 
