@@ -3,13 +3,9 @@ import { Nav } from "./nav";
 
 export default function AppLayout() {
   return (
-    <>
+    <div className="w-screen h-screen overflow-hidden flex flex-col">
       <Nav />
-      <main className="flex-1 overflow-hidden">
-        <div className="w-full h-full">
-          <Outlet />
-        </div>
-      </main>
-    </>
+      <Outlet />
+    </div>
   );
 }
