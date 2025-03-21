@@ -6,7 +6,7 @@ export function Nav() {
   const location = useLocation();
 
   return (
-    <Navbar isBordered>
+    <Navbar position="static" isBordered>
       <NavbarBrand as={Link} to={"/"} className="flex-1">
         <LuEarth size={24} />
         <span className="ml-2 text-lg font-semibold">WS 2026</span>

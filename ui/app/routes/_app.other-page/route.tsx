@@ -9,6 +9,8 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   return (
-    <h1 className="text-center text-3xl font-semibold mt-12">Other page</h1>
+    <h1 className="text-center text-3xl font-semibold px-8 py-12">
+      Other page
+    </h1>
   );
 }
