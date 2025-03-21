@@ -1,6 +1,4 @@
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import type { Route } from "./+types/route";
-import { Card, CardHeader } from "@heroui/react";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,24 +7,10 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-const fills = [
-  "fill-primary",
-  "fill-secondary",
-  "fill-success",
-  "fill-warning",
-];
-
-const pieChartData = [
-  { name: "Male", count: 132, color: "red" },
-  { name: "Female", count: 164 },
-  { name: "N/A", count: 32 },
-  { name: "Other", count: 6 },
-];
-
 export default function Home() {
   return (
-    <>
-      <h1 className="text-center text-3xl font-semibold px-8 py-12">Home</h1>
-    </>
+    <div className="flex flex-col px-8 py-12 gap-8 overflow-y-scroll min-h-full">
+      <h1 className="text-center text-3xl font-semibold">Home</h1>
+    </div>
   );
 }

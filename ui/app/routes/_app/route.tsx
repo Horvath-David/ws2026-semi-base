@@ -5,7 +5,9 @@ export default function AppLayout() {
   return (
     <div className="w-screen h-screen overflow-hidden flex flex-col">
       <Nav />
-      <Outlet />
+      <div className="flex-1">
+        <Outlet />
+      </div>
     </div>
   );
 }
