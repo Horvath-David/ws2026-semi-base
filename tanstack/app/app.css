@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+html,
+body {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  color-scheme: dark;
+}

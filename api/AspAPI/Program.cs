@@ -126,7 +126,26 @@ app.MapGet("/api/customers/search", (string? searchTerm, CompetitorContext db) =
         x.Discount,
         OrdersCount = db.Orders.Count(order => order.CustomerId == x.Id)
     });
-    return Results.Json(results.Concat(results).Concat(results));
+    return Results.Json(
+        results
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+            // .Concat(results)
+    );
 });
 
 app.MapPost("/api/orders", async (OrderFilters filters, CompetitorContext db) => {
