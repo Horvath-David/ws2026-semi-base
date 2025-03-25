@@ -9,10 +9,11 @@ import {
   useNavigate,
 } from "react-router";
 
-import { HeroUIProvider } from "@heroui/react";
+import { Button, HeroUIProvider, Input } from "@heroui/react";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -48,7 +49,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 const queryClient = new QueryClient();
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const navigate = useNavigate();
+
+  const [error, setError] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -57,7 +64,54 @@ export default function App() {
         navigate={navigate}
         useHref={useHref}
       >
-        <Outlet />
+        {isLoggedIn ? (
+          <Outlet />
+        ) : (
+          <>
+            <div className="w-[100dvw] h-[100dvh] flex flex-col gap-6 items-center justify-center">
+              <h1 className="text-2xl font-semibold">Please log in</h1>
+              <Input
+                label="Username"
+                className="w-md"
+                value={username}
+                onValueChange={setUsername}
+              />
+              <Input
+                label="Password"
+                className="w-md"
+                value={password}
+                onValueChange={setPassword}
+              />
+              <Button
+                className="w-md"
+                color="primary"
+                onPress={async () => {
+                  const res = await fetch(
+                    "http://authentication.skills.local/authentication/login",
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        username,
+                        password,
+                      }),
+                    }
+                  );
+                  if (!res.ok) {
+                    setError("failed to log in");
+                    return;
+                  }
+                  setIsLoggedIn(true);
+                }}
+              >
+                Log in
+              </Button>
+              <span className="w-md text-center">{error}</span>
+            </div>
+          </>
+        )}
       </HeroUIProvider>
     </QueryClientProvider>
   );

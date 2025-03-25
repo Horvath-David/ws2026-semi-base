@@ -19,14 +19,6 @@ export function Nav() {
         >
           Home
         </NavbarItem>
-        <NavbarItem
-          as={Link}
-          className="data-[active=true]:text-primary"
-          to="/other-page"
-          isActive={location.pathname.startsWith("/other-page")}
-        >
-          Other page
-        </NavbarItem>
       </NavbarContent>
       <div className="flex-1 max-h-full" aria-hidden="true"></div>
     </Navbar>

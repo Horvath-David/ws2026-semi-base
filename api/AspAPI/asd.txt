@@ -1,0 +1,54 @@
+{
+  "page": 0,
+  "pageSize": 10,
+  "totalCount": 5,
+  "hasPreviousPage": false,
+  "hasNextPage": false,
+  "items": [
+    {
+      "id": "08dd6923-297e-4da1-8bda-fd569d4ab646",
+      "number": 1111,
+      "productName": "Chocolate Croissant",
+      "isTakeaway": true,
+      "orderedAt": "0001-01-01T00:00:00",
+      "quantity": 0,
+      "totalPrice": 0.0000000000000000000000000000
+    },
+    {
+      "id": "08dd6923-43a6-45d1-8f75-dd7f1462467a",
+      "number": 1111,
+      "productName": "Chocolate Croissant",
+      "isTakeaway": true,
+      "orderedAt": "2025-03-22T02:22:22",
+      "quantity": 0,
+      "totalPrice": 0.0000000000000000000000000000
+    },
+    {
+      "id": "08dd6923-a4bf-470e-885c-502ba1ab283a",
+      "number": 1111,
+      "productName": "Chocolate Croissant",
+      "isTakeaway": true,
+      "orderedAt": "2025-03-22T02:22:22",
+      "quantity": 0,
+      "totalPrice": 0.0000000000000000000000000000
+    },
+    {
+      "id": "08dd6924-560d-470d-8bcf-bd4e0180944e",
+      "number": 1111,
+      "productName": "Chocolate Croissant",
+      "isTakeaway": true,
+      "orderedAt": "2025-03-22T02:22:22",
+      "quantity": 0,
+      "totalPrice": 0.0000000000000000000000000000
+    },
+    {
+      "id": "08dd6925-075d-48ae-8195-6523742c9664",
+      "number": 1111,
+      "productName": "Chocolate Croissant",
+      "isTakeaway": true,
+      "orderedAt": "2025-03-22T03:22:22",
+      "quantity": 0,
+      "totalPrice": 0.0000000000000000000000000000
+    }
+  ]
+}
