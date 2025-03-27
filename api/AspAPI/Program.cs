@@ -109,12 +109,12 @@ app.MapPost("/api/orders/purchase", async (NewOrderBody body, CompetitorContext 
     return Results.Json(order.Id);
 });
 
-app.MapGet("/api/customers/search", (string? searchTerm, CompetitorContext db) => {
+app.MapGet("/api/customers/search", (string? searchTerm) => {
     if (searchTerm == null || searchTerm == "") {
         return Results.Json("searchTerm is invalid", statusCode: 400);
     }
 
-    var results = db.Customers.Where(
+    var results = GlobalData.customers.Where(
         x => x.Id.ToString().Contains(searchTerm) ||
             (x.FirstName + " " + x.LastName).Contains(searchTerm) ||
             (x.Email != null && x.Email.Contains(searchTerm))
@@ -124,28 +124,9 @@ app.MapGet("/api/customers/search", (string? searchTerm, CompetitorContext db) =
         x.LastName,
         x.Email,
         x.Discount,
-        OrdersCount = db.Orders.Count(order => order.CustomerId == x.Id)
+        OrdersCount = 0
     });
-    return Results.Json(
-        results
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-            // .Concat(results)
-    );
+    return Results.Json(results);
 });
 
 app.MapPost("/api/orders", async (OrderFilters filters, CompetitorContext db) => {
