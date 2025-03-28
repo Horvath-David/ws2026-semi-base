@@ -49,7 +49,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 const queryClient = new QueryClient();
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const navigate = useNavigate();
 

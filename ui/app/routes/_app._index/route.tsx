@@ -85,9 +85,11 @@ export default function Home() {
         aria-label="asd"
         isHeaderSticky
         isStriped
-        classNames={{
-          base: "max-w-6xl mx-auto relative",
-        }}
+        classNames={
+          {
+            // base: "max-w-6xl mx-auto relative",
+          }
+        }
       >
         <TableHeader>
           <TableColumn className="max-w-24">ID #</TableColumn>
@@ -98,7 +100,7 @@ export default function Home() {
           <TableColumn align="end">Order Count</TableColumn>
           <TableColumn align="end">Action</TableColumn>
         </TableHeader>
-        <TableBody className="max-h-[calc(100%-40rem)]">
+        <TableBody /*className="max-h-[calc(100%-40rem)]"*/>
           {data?.map((customer) => (
             <TableRow key={customer.id} className="">
               <TableCell

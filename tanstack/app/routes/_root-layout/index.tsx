@@ -1,16 +1,4 @@
-import {
-  Input,
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Code,
-  Button,
-  Spinner,
-  Card,
-} from "@heroui/react";
+import { Input, Code, Button, Spinner, Card } from "@heroui/react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import {
   createFileRoute,
@@ -21,6 +9,14 @@ import { useState, useEffect } from "react";
 import { LuList } from "react-icons/lu";
 import { PiMagicWand } from "react-icons/pi";
 import { API_URL } from "../../constants";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export const Route = createFileRoute("/_root-layout/")({
   component: RouteComponent,
@@ -86,18 +82,18 @@ function RouteComponent() {
         aria-label="asd"
         isHeaderSticky
         isStriped
-        classNames={{
-          base: "max-w-6xl mx-auto relative",
-        }}
+        className="max-w-6xl mx-auto relative"
       >
         <TableHeader>
-          <TableColumn className="max-w-24">ID #</TableColumn>
-          <TableColumn>First Name</TableColumn>
-          <TableColumn>Last Name</TableColumn>
-          <TableColumn>E-mail</TableColumn>
-          <TableColumn align="end">Discount %</TableColumn>
-          <TableColumn align="end">Order Count</TableColumn>
-          <TableColumn align="end">Action</TableColumn>
+          <TableRow>
+            <TableHead className="max-w-24">ID #</TableHead>
+            <TableHead>First Name</TableHead>
+            <TableHead>Last Name</TableHead>
+            <TableHead>E-mail</TableHead>
+            <TableHead className="text-end">Discount %</TableHead>
+            <TableHead className="text-end">Order Count</TableHead>
+            <TableHead className="text-end">Action</TableHead>
+          </TableRow>
         </TableHeader>
         <TableBody className="max-h-[calc(100%-40rem)]">
           {data?.map((customer) => (
@@ -111,13 +107,13 @@ function RouteComponent() {
               <TableCell>{customer.firstName}</TableCell>
               <TableCell>{customer.lastName}</TableCell>
               <TableCell>{customer.email}</TableCell>
-              <TableCell>
+              <TableCell className="text-end">
                 <Code>{Math.round(customer.discount * 100 * 100) / 100}%</Code>
               </TableCell>
-              <TableCell>
+              <TableCell className="text-end">
                 <Code>{customer.ordersCount}</Code>
               </TableCell>
-              <TableCell align="right">
+              <TableCell className="text-end">
                 <Button
                   onPress={() =>
                     navigate({

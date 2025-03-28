@@ -3,8 +3,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   createRootRoute,
   HeadContent,
+  NavigateOptions,
   Outlet,
+  ToOptions,
   Scripts,
+  useRouter,
 } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import "../app.css";
@@ -39,13 +42,25 @@ export const Route = createRootRoute({
   component: RootComponent,
 });
 
+declare global {
+  interface RouterConfig {
+    href: ToOptions["to"];
+    routerOptions: Omit<NavigateOptions, keyof ToOptions>;
+  }
+}
+
 const queryClient = new QueryClient();
 
 function RootComponent() {
+  const router = useRouter();
   return (
     <RootDocument>
       <QueryClientProvider client={queryClient}>
-        <HeroUIProvider>
+        <HeroUIProvider
+          //@ts-ignore
+          navigate={(to, options) => router.navigate({ to, ...options })}
+          useHref={(to) => router.buildLocation({ to }).href}
+        >
           <Outlet />
         </HeroUIProvider>
       </QueryClientProvider>
