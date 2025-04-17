@@ -13,6 +13,7 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowAnyHeader();
         }));
+builder.Services.AddDbContext<SkillsContext>();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment()) {
@@ -25,7 +26,6 @@ app.UseCors("AllowAllOrigins");
 
 // ##### GLOBALS #####
 
-var db = new SkillsContext();
 const string welcomeMessage = "AspAPI - WorldSkills 2026 BaseProject v0.0.1";
 
 // ##### ENDPOINTS & UTILS #####
@@ -34,7 +34,7 @@ app.MapGet("/", () => new WelcomeResponse {
     Message = welcomeMessage
 });
 
-app.MapGet("/db-test", () =>
+app.MapGet("/db-test", (SkillsContext db) =>
     db.ProgrammingLanguages
         .OrderBy(x => x.ReleaseDate)
 );
