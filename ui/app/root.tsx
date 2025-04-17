@@ -53,7 +53,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <HeroUIProvider
-        className="h-[100dvh] flex flex-col overflow-y-auto"
+        className="h-[100dvh] w-full"
         navigate={navigate}
         useHref={useHref}
       >

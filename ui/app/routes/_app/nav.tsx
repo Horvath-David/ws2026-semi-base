@@ -1,34 +1,44 @@
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { LuEarth } from "react-icons/lu";
-import { useLocation, Link } from "react-router";
+import { Link, useLocation } from "react-router";
+
+const activeVariant = "faded";
+const inactiveVariant = "bordered";
 
 export function Nav() {
   const location = useLocation();
 
   return (
-    <Navbar position="static" isBordered>
-      <NavbarBrand as={Link} to={"/"} className="flex-1">
+    <nav className="flex flex-col h-full items-center bg-content1 border-r border-content3">
+      <Link
+        to={"/"}
+        className="flex items-center justify-center w-full py-4 border-b border-content3"
+      >
         <LuEarth size={24} />
         <span className="ml-2 text-lg font-semibold">WS 2026</span>
-      </NavbarBrand>
-      <NavbarContent className="flex-1 justify-center!">
-        <NavbarItem
+      </Link>
+      <div className="flex-1 flex flex-col w-full p-4 gap-4">
+        <Button
           as={Link}
           className="data-[active=true]:text-primary"
-          isActive={location.pathname === "/"}
+          variant={location.pathname === "/" ? activeVariant : inactiveVariant}
         >
           Home
-        </NavbarItem>
-        <NavbarItem
+        </Button>
+        <Button
           as={Link}
           className="data-[active=true]:text-primary"
           to="/other-page"
-          isActive={location.pathname.startsWith("/other-page")}
+          variant={
+            location.pathname.startsWith("/other-page")
+              ? activeVariant
+              : inactiveVariant
+          }
         >
           Other page
-        </NavbarItem>
-      </NavbarContent>
+        </Button>
+      </div>
       <div className="flex-1 max-h-full" aria-hidden="true"></div>
-    </Navbar>
+    </nav>
   );
 }
