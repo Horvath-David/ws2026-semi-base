@@ -1,15 +1,20 @@
+> Ezeket legközelebb már tőled fejből fogom kérni. :D
+
 ## Scaffolding DbContext and Models
+
 ```bash
 dotnet ef dbcontext scaffold "YourConnectionString" Pomelo.EntityFrameworkCore.MySql -o Models
 ```
 
 ## Generation migrations
+
 ```bash
 dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
 
 ## CRUD
+
 ```csharp
 // Create
 Console.WriteLine("Inserting a new blog");
