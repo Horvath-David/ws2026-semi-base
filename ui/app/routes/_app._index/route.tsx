@@ -81,56 +81,71 @@ export default function Home() {
         onValueChange={setSearch}
       />
 
-      <Table
-        aria-label="asd"
-        isHeaderSticky
-        isStriped
-        classNames={
-          {
-            // base: "max-w-6xl mx-auto relative",
-          }
-        }
-      >
-        <TableHeader>
-          <TableColumn className="max-w-24">ID #</TableColumn>
-          <TableColumn>First Name</TableColumn>
-          <TableColumn>Last Name</TableColumn>
-          <TableColumn>E-mail</TableColumn>
-          <TableColumn align="end">Discount %</TableColumn>
-          <TableColumn align="end">Order Count</TableColumn>
-          <TableColumn align="end">Action</TableColumn>
-        </TableHeader>
-        <TableBody /*className="max-h-[calc(100%-40rem)]"*/>
-          {data?.map((customer) => (
-            <TableRow key={customer.id} className="">
-              <TableCell
-                title={customer.id}
-                className="max-w-24 truncate whitespace-nowrap"
-              >
-                {customer.id}
-              </TableCell>
-              <TableCell>{customer.firstName}</TableCell>
-              <TableCell>{customer.lastName}</TableCell>
-              <TableCell>{customer.email}</TableCell>
-              <TableCell>
-                <Code>{Math.round(customer.discount * 100 * 100) / 100}%</Code>
-              </TableCell>
-              <TableCell>
-                <Code>{customer.ordersCount}</Code>
-              </TableCell>
-              <TableCell align="right">
-                <Button
-                  onPress={() => navigate(`/customer-orders/${customer.id}`)}
-                  variant="faded"
-                  startContent={<LuList size={20} />}
+      <div className="max-w-full w-full overflow-x-auto">
+        <table
+          aria-label="asd"
+          // isHeaderSticky
+          // isStriped
+          // classNames={
+          //   {
+          //     // base: "max-w-6xl mx-auto relative",
+          //   }
+          // }
+          className="max-w-full w-full overflow-x-scroll"
+        >
+          <thead className="w-full">
+            <tr className="w-full bg-content3 rounded-xl">
+              <th className="p-2">ID #</th>
+              <th className="p-2">First Name</th>
+              <th className="p-2">Last Name</th>
+              <th className="p-2">E-mail</th>
+              <th align="right" className="p-2">
+                Discount %
+              </th>
+              <th align="right" className="p-2">
+                Order Count
+              </th>
+              <th align="right" className="p-2">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-content1 [&_tr]:even:bg-content2">
+            {data?.map((customer) => (
+              <tr key={customer.id} className="">
+                <td
+                  title={customer.id}
+                  className="max-w-48 p-2 truncate whitespace-nowrap"
                 >
-                  Orders
-                </Button>
-              </TableCell>
-            </TableRow>
-          )) || <></>}
-        </TableBody>
-      </Table>
+                  {customer.id}
+                </td>
+                <td className="p-2">{customer.firstName}</td>
+                <td className="p-2">{customer.lastName}</td>
+                <td className="p-2">{customer.email}</td>
+                <td align="right" className="p-2">
+                  <Code>
+                    {Math.round(customer.discount * 100 * 100) / 100}%
+                  </Code>
+                </td>
+                <td align="right" className="p-2">
+                  <Code>{customer.ordersCount}</Code>
+                </td>
+                <td className="p-2" align="right">
+                  <Button
+                    onPress={() => navigate(`/customer-orders/${customer.id}`)}
+                    variant="faded"
+                    size="sm"
+                    startContent={<LuList size={20} />}
+                  >
+                    Orders
+                  </Button>
+                </td>
+              </tr>
+            )) || <></>}
+          </tbody>
+        </table>
+      </div>
+
       {(isLoading || isFetching) && (
         <div className="bg-black/50 absolute inset-0 top-[16rem] flex items-center justify-center">
           <Spinner variant="simple" size="lg" />

@@ -37,7 +37,7 @@ app.MapGet("/", () => new WelcomeResponse {
 });
 
 app.MapGet("/db-test", (CompetitorContext db) =>
-    db.Customers
+    GlobalData.customers
         .OrderBy(x => x.Discount)
 );
 
