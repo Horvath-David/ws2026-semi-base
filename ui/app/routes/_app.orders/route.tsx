@@ -101,8 +101,9 @@ export default function Orders() {
           <ModalBody>
             <span className="font-semibold">Order ID: {selectedOrder?.id}</span>
             <span className="">
-              Date: ${new Date(selectedOrder?.orderedAt ?? "").toLocaleString()}
+              Date: {new Date(selectedOrder?.orderedAt ?? "").toLocaleString()}
             </span>
+            <span className="">Status: {selectedOrder?.status}</span>
 
             <table className="w-full **:p-2.5 bg-content1 [&_td]:border [&_th]:border **:border-content3">
               <thead className="bg-content2">
