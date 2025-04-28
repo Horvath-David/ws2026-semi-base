@@ -26,3 +26,13 @@ dotnet tool install --global dotnet-ef
 ### JetBrains Rider (ha megoldható)
 
 - [One Dark color scheme](https://plugins.jetbrains.com/plugin/11938-one-dark-theme)
+
+# How to start
+
+## Backend
+
+Go into the `api/AspAPI` directory, and run `dotnet run` (or `dotnet watch` for hot reloading)
+
+## Frontend
+
+Go into the `ui` directory, and run `pnpm install`, then `pnpm run dev`
