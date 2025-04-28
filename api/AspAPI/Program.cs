@@ -246,7 +246,7 @@ app.MapPatch("/api/carts/items/{itemId}", async (DbContext db, string itemId, [F
 
     var cartItem = db.CartItems.FirstOrDefault(x => x.CartId == cart.Id && x.Id.ToString() == itemId);
     if (cartItem == null) {
-        return Results.BadRequest($"Item {itemId} not found in cart");
+        return Results.NotFound($"Item {itemId} not found in cart");
     }
 
     CrmProduct? product;
@@ -259,6 +259,47 @@ app.MapPatch("/api/carts/items/{itemId}", async (DbContext db, string itemId, [F
     if (product?.AvailableQuantity < newQuantity) return Results.BadRequest($"Product {cartItem.ProductId} has insufficient quantity");
 
     cartItem.Quantity = newQuantity ?? 0;
+    db.SaveChanges();
+
+    List<CartModelItem> completeItems = [];
+
+    foreach (var item in cart.CartItems) {
+        var productDetails = await hc.GetFromJsonAsync<CrmProduct>($"http://crm.skills.lan/api/products/{item.ProductId}");
+        completeItems.Add(new CartModelItem(item.Id.ToString(), productDetails?.Name ?? "", item.Quantity, productDetails?.Price ?? 0, (productDetails?.Price ?? 0) * item.Quantity));
+    }
+
+    return Results.Ok(new CartModel(cart.Id.ToString(), cart.CreatedAt.ToString("s").Split(".").First(), completeItems.Sum(x => x.TotalPrice), [.. completeItems]));
+});
+
+app.MapDelete("/api/carts/items/{itemId}", async (DbContext db, string itemId, [FromHeader] string Authorization = "") => {
+    var hc = new HttpClient();
+
+    UserInfo? user;
+    try {
+        hc.DefaultRequestHeaders.Add("Authorization", Authorization);
+        user = await hc.GetFromJsonAsync<UserInfo?>("http://idp.skills.lan/api/authentication/info");
+    } catch {
+        return Results.Unauthorized();
+    }
+
+    var cart = db.Carts.FirstOrDefault(x => x.CreatedByUserId.Equals(Guid.Parse(user!.Id)));
+    if (cart == null) {
+        cart = new Cart {
+            CartItems = [],
+            CreatedAt = DateTime.Parse(DateTime.UtcNow.ToString()),
+            CreatedByUserId = Guid.Parse(user!.Id),
+            Id = Guid.NewGuid(),
+        };
+        db.Carts.Add(cart);
+        db.SaveChanges();
+    }
+
+    var cartItem = db.CartItems.FirstOrDefault(x => x.CartId == cart.Id && x.Id.ToString() == itemId);
+    if (cartItem == null) {
+        return Results.NotFound($"Item {itemId} not found in cart");
+    }
+
+    db.CartItems.Remove(cartItem);
     db.SaveChanges();
 
     List<CartModelItem> completeItems = [];
