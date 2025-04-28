@@ -39,4 +39,44 @@ app.MapGet("/db-test", (SkillsContext db) =>
         .OrderBy(x => x.ReleaseDate)
 );
 
+app.MapGet("/api/customers/search", (string? searchTerm, int page = 0, int perPage = 25) => {
+    if (searchTerm == null || searchTerm == "") {
+        return Results.BadRequest("searchTerm is invalid");
+    }
+
+    var total = GlobalData.customers.Where(
+        x => x.Id.ToString().Contains(searchTerm) ||
+            (x.FirstName + " " + x.LastName).Contains(searchTerm) ||
+            (x.Email != null && x.Email.Contains(searchTerm))
+    ).Count();
+
+    var results = GlobalData.customers.Where(
+        x => x.Id.ToString().Contains(searchTerm) ||
+            (x.FirstName + " " + x.LastName).Contains(searchTerm) ||
+            (x.Email != null && x.Email.Contains(searchTerm))
+    ).Skip(perPage * page).Take(perPage).Select(x => new {
+        x.Id,
+        x.FirstName,
+        x.LastName,
+        x.Email,
+        x.Discount,
+        x.OrdersCount
+    });
+
+    return Results.Json(new {
+        total,
+        perPage,
+        results,
+    });
+});
+
+app.MapPost("api/customers/{id}/increment-order", (Guid id) => {
+    var customer = GlobalData.customers.FirstOrDefault(x => x.Id == id);
+    if (customer == null) return Results.BadRequest("invalid ID");
+
+    customer.OrdersCount += 1;
+
+    return Results.Ok(customer);
+});
+
 app.Run();

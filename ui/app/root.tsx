@@ -9,7 +9,7 @@ import {
   useNavigate,
 } from "react-router";
 
-import { HeroUIProvider } from "@heroui/react";
+import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -57,6 +57,7 @@ export default function App() {
         navigate={navigate}
         useHref={useHref}
       >
+        <ToastProvider />
         <Outlet />
       </HeroUIProvider>
     </QueryClientProvider>
