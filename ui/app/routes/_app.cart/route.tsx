@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { API_URL } from "~/constants";
-import type { Cart } from "../_app/nav";
+import { type CartItem, type Cart } from "../_app/nav";
 import {
   addToast,
   Button,
@@ -9,8 +9,14 @@ import {
   CardFooter,
   CardHeader,
   Code,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   NumberInput,
   Spinner,
+  useDisclosure,
 } from "@heroui/react";
 import { useState } from "react";
 
@@ -92,6 +98,45 @@ export default function CartPage() {
     setPlaceOrderLoading(false);
   }
 
+  const [editLoading, setEditLoading] = useState(false);
+  const [newQuantity, setNewQuantity] = useState(0);
+  const editModal = useDisclosure();
+
+  async function setQuantity() {
+    setEditLoading(true);
+
+    const res = await fetch(`${API_URL}/carts/items/${selectedItem?.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: JSON.stringify({
+        newQuantity,
+      }),
+    });
+    if (!res.ok) {
+      addToast({
+        title: "Error adding to cart",
+        description: res.status === 500 ? await res.text() : await res.json(),
+        color: "danger",
+      });
+      setEditLoading(false);
+      return;
+    }
+    qc.setQueryData(["cart"], await res.json());
+    qc.refetchQueries({
+      queryKey: ["products"],
+    });
+    addToast({
+      title: "Successfully added to cart",
+      color: "success",
+    });
+    editModal.onClose();
+  }
+
+  const [selectedItem, setSelectedItem] = useState<CartItem>();
+
   return (
     <>
       <h1 className="text-center mt-12 text-3xl font-semibold">Cart</h1>
@@ -112,8 +157,18 @@ export default function CartPage() {
               {data?.items.map((item) => (
                 <tr key={item.id}>
                   <td>{item.productName}</td>
-                  <td className="p-0!" align="right">
-                    <NumberInput defaultValue={item.quantity} size="sm" />
+                  <td align="right">
+                    {item.quantity}
+                    <Button
+                      onPress={() => {
+                        setSelectedItem(item);
+                        setNewQuantity(item.quantity);
+                        editModal.onOpen();
+                      }}
+                      className="ml-4"
+                    >
+                      Edit
+                    </Button>
                   </td>
                   <td align="right">
                     <Code>${item.price}</Code>
@@ -140,6 +195,44 @@ export default function CartPage() {
           </table>
         </div>
       </div>
+
+      <Modal
+        onClose={editModal.onClose}
+        onOpenChange={editModal.onOpenChange}
+        isOpen={editModal.isOpen}
+      >
+        <ModalContent>
+          <ModalHeader>Edit quantity</ModalHeader>
+          <ModalBody>
+            <span className="font-semibold">
+              Name: {selectedItem?.productName}
+            </span>
+            <span className="">Price: ${selectedItem?.price}</span>
+            <NumberInput
+              label="Quantity"
+              labelPlacement="outside"
+              value={newQuantity}
+              onValueChange={setNewQuantity}
+              minValue={1}
+            />
+            <div className="flex justify-between items-center">
+              <span>Total: ${(selectedItem?.price ?? 0) * newQuantity}</span>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="light" onPress={editModal.onClose}>
+              Cancel
+            </Button>
+            <Button
+              onPress={setQuantity}
+              color="primary"
+              isLoading={editLoading}
+            >
+              Save
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       {!isLoading && (
         <>
