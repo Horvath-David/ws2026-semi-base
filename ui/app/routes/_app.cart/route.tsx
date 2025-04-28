@@ -9,6 +9,7 @@ import {
   CardFooter,
   CardHeader,
   Code,
+  NumberInput,
   Spinner,
 } from "@heroui/react";
 import { useState } from "react";
@@ -111,7 +112,9 @@ export default function CartPage() {
               {data?.items.map((item) => (
                 <tr key={item.id}>
                   <td>{item.productName}</td>
-                  <td align="right">{item.quantity}</td>
+                  <td className="p-0!" align="right">
+                    <NumberInput defaultValue={item.quantity} size="sm" />
+                  </td>
                   <td align="right">
                     <Code>${item.price}</Code>
                   </td>
