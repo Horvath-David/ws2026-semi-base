@@ -9,10 +9,17 @@ import {
   useNavigate,
 } from "react-router";
 
-import { HeroUIProvider } from "@heroui/react";
+import {
+  addToast,
+  Button,
+  HeroUIProvider,
+  Input,
+  ToastProvider,
+} from "@heroui/react";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect, useState, type FormEvent } from "react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -50,6 +57,51 @@ const queryClient = new QueryClient();
 export default function App() {
   const navigate = useNavigate();
 
+  const [loggedIn, setLoggedIn] = useState(
+    !!localStorage.getItem("accessToken")
+  );
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    console.log(loggedIn);
+  }, [loggedIn]);
+
+  async function logIn(e: FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+
+    const res = await fetch("http://idp.skills.lan/api/authentication/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    });
+    if (!res.ok) {
+      addToast({
+        title: "Failed to log in",
+        color: "danger",
+      });
+      setLoading(false);
+      return;
+    }
+    const token = (await res.json()) as string;
+    localStorage.setItem("accessToken", token);
+    setLoggedIn(true);
+    setLoading(false);
+    addToast({
+      title: "Logged in successfully",
+      color: "success",
+    });
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <HeroUIProvider
@@ -57,7 +109,45 @@ export default function App() {
         navigate={navigate}
         useHref={useHref}
       >
-        <Outlet />
+        <ToastProvider />
+        {loggedIn ? (
+          <Outlet />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <form
+              onSubmit={logIn}
+              className="flex flex-col gap-4 p-12 items-center bg-content1 rounded-2xl w-full max-w-lg"
+            >
+              <h1 className="text-4xl font-semibold">Welcome back!</h1>
+              <p className="mb-6">Please enter your credentials to log in</p>
+
+              <Input
+                label="Username"
+                labelPlacement="outside"
+                placeholder="Enter your username"
+                value={username}
+                onValueChange={setUsername}
+              />
+
+              <Input
+                label="Password"
+                labelPlacement="outside"
+                placeholder="Enter your password"
+                value={password}
+                onValueChange={setPassword}
+              />
+
+              <Button
+                type="submit"
+                color="primary"
+                className="w-full mt-6"
+                isLoading={loading}
+              >
+                Sign in
+              </Button>
+            </form>
+          </div>
+        )}
       </HeroUIProvider>
     </QueryClientProvider>
   );
