@@ -1,4 +1,4 @@
-﻿# WorldSkills 2026 Középdöntő baseproject
+﻿# WorldSkills 2026 nation finals Competitor 2
 
 ## Backend
 
@@ -33,6 +33,6 @@ dotnet tool install --global dotnet-ef
 
 Go into the `api/AspAPI` directory, and run `dotnet run` (or `dotnet watch` for hot reloading)
 
-## Frontend
+## UI
 
 Go into the `ui` directory, and run `pnpm install`, then `pnpm run dev`
