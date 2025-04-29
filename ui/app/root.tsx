@@ -20,6 +20,10 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState, type FormEvent } from "react";
+import { FaBox } from "react-icons/fa";
+import { BiBox, BiPackage } from "react-icons/bi";
+import { PiPackage } from "react-icons/pi";
+import { BsBox } from "react-icons/bs";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -113,13 +117,18 @@ export default function App() {
         {loggedIn ? (
           <Outlet />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
+          <div className="w-full h-full bg-content1 flex items-center justify-center">
             <form
               onSubmit={logIn}
-              className="flex flex-col gap-4 p-12 items-center bg-content1 rounded-2xl w-full max-w-lg"
+              className="flex flex-col gap-4 p-6 items-center rounded-2xl w-full max-w-lg"
             >
-              <h1 className="text-4xl font-semibold">Welcome back!</h1>
-              <p className="mb-6">Please enter your credentials to log in</p>
+              <div className="bg-content2 size-18 rounded-2xl flex items-center justify-center">
+                <FaBox size={24} />
+              </div>
+              <h1 className="text-2xl text-center font-semibold">
+                Warehouse Manager
+              </h1>
+              <p className="mb-6 -mt-3">Sign in to your account</p>
 
               <Input
                 label="Username"
@@ -133,6 +142,7 @@ export default function App() {
                 label="Password"
                 labelPlacement="outside"
                 placeholder="Enter your password"
+                type="password"
                 value={password}
                 onValueChange={setPassword}
               />
@@ -140,7 +150,7 @@ export default function App() {
               <Button
                 type="submit"
                 color="primary"
-                className="w-full mt-6"
+                className="w-full mt-2"
                 isLoading={loading}
               >
                 Sign in

@@ -8,10 +8,10 @@ export function meta({}: Route.MetaArgs) {
 
 export default function AppLayout() {
   return (
-    <div className="w-full h-full overflow-hidden flex">
-      <div className="w-2xs bg-blue-500">
+    <div className="w-full h-full overflow-hidden flex bg-content1">
+      {/* <div className="w-2xs bg-blue-500">
         <Nav />
-      </div>
+      </div> */}
       <div className="flex-1 overflow-y-auto">
         <Outlet />
       </div>
