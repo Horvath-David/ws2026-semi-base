@@ -1,4 +1,4 @@
-﻿# WorldSkills 2026 nation finals Competitor 2
+﻿# WorldSkills 2026 nation finals Competitor 2 - Session 3
 
 
 # How to start
