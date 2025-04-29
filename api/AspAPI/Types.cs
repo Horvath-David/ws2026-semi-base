@@ -72,3 +72,18 @@ public record CartModelItem(
     decimal Price,
     decimal TotalPrice
 );
+
+public enum WorkerRoles {
+    Gatherer,
+    Transporter
+}
+
+public record WhOrderItem(
+    string ProductName,
+    int Quantity
+);
+
+public record CrmPartner(
+    string Id,
+    string Name
+);

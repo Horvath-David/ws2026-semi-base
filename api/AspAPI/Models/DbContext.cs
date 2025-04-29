@@ -5,60 +5,57 @@ using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 
 namespace AspAPI.Models;
 
-public partial class DbContext : Microsoft.EntityFrameworkCore.DbContext
-{
-    public DbContext()
-    {
+public partial class DbContext : Microsoft.EntityFrameworkCore.DbContext {
+    public DbContext() {
     }
 
     public DbContext(DbContextOptions<DbContext> options)
-        : base(options)
-    {
+        : base(options) {
     }
 
-    public virtual DbSet<Cart> Carts { get; set; }
+    public virtual DbSet<WorkSession> WorkSessions { get; set; }
 
-    public virtual DbSet<CartItem> CartItems { get; set; }
+    public virtual DbSet<WorkSessionItem> WorkSessionItems { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("host=mysql;port=3306;user=competitor2;password=skills9BadBad;database=competitor2-session1", Microsoft.EntityFrameworkCore.ServerVersion.Parse("9.3.0-mysql"));
+        => optionsBuilder.UseMySql("host=mysql;port=3306;username=competitor2;password=skills9BadBad;database=competitor2-session3", Microsoft.EntityFrameworkCore.ServerVersion.Parse("9.3.0-mysql"));
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
 
-        modelBuilder.Entity<Cart>(entity =>
-        {
+        modelBuilder.Entity<WorkSession>(entity => {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.Property(e => e.Id)
                 .UseCollation("ascii_general_ci")
                 .HasCharSet("ascii");
-            entity.Property(e => e.CreatedAt).HasMaxLength(6);
-            entity.Property(e => e.CreatedByUserId)
+            entity.Property(e => e.FinishedAt).HasMaxLength(6);
+            entity.Property(e => e.StartedAt).HasMaxLength(6);
+            entity.Property(e => e.UserId)
                 .UseCollation("ascii_general_ci")
                 .HasCharSet("ascii");
         });
 
-        modelBuilder.Entity<CartItem>(entity =>
-        {
+        modelBuilder.Entity<WorkSessionItem>(entity => {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.HasIndex(e => e.CartId, "IX_CartItems_CartId");
+            entity.HasIndex(e => e.WorkSessionId, "IX_WorkSessionItems_WorkSessionId");
 
             entity.Property(e => e.Id)
                 .UseCollation("ascii_general_ci")
                 .HasCharSet("ascii");
-            entity.Property(e => e.CartId)
+            entity.Property(e => e.FinishedAt).HasMaxLength(6);
+            entity.Property(e => e.OrderId)
                 .UseCollation("ascii_general_ci")
                 .HasCharSet("ascii");
-            entity.Property(e => e.ProductId)
+            entity.Property(e => e.StartedAt).HasMaxLength(6);
+            entity.Property(e => e.WorkSessionId)
                 .UseCollation("ascii_general_ci")
                 .HasCharSet("ascii");
 
-            entity.HasOne(d => d.Cart).WithMany(p => p.CartItems).HasForeignKey(d => d.CartId);
+            entity.HasOne(d => d.WorkSession).WithMany(p => p.WorkSessionItems).HasForeignKey(d => d.WorkSessionId);
         });
 
         OnModelCreatingPartial(modelBuilder);
