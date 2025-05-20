@@ -1,9 +1,33 @@
-﻿namespace AspAPI;
+﻿using System.Text.Json.Serialization;
+
+namespace AspAPI;
 
 internal record WelcomeResponse {
     // [JsonPropertyName("welcome_message")]
     public string? Message { get; set; }
 }
+
+// Mock models
+
+public record UserMock(
+    UserInfo Info,
+    string Password,
+    string PartnerId
+);
+
+public record JwtPayload {
+    [JsonPropertyName("iat")] public int Iat { get; set; }
+    [JsonPropertyName("sub")] public string Sub { get; set; } = "";
+    [JsonPropertyName("name")] public string Name { get; set; } = "";
+    [JsonPropertyName("roles")] public string[] Roles { get; set; } = [];
+}
+
+public record BaseProduct {
+    public string Name { get; set; } = "";
+    public decimal Price { get; set; }
+}
+
+// Normal models
 
 public record UserInfo(
     string[] Roles,

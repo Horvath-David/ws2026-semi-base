@@ -20,6 +20,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState, type FormEvent } from "react";
+import { API_URL } from "./constants";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -74,7 +75,7 @@ export default function App() {
     e.preventDefault();
     setLoading(true);
 
-    const res = await fetch("http://idp.skills.lan/api/authentication/login", {
+    const res = await fetch(`${API_URL}/authentication/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

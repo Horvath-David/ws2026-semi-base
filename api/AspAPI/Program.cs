@@ -1,9 +1,7 @@
 using System.Text.Json;
-using System.Threading.Tasks;
 using AspAPI;
 using AspAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 
 // ##### SERVER SETUP #####
 
@@ -32,6 +30,76 @@ app.UseCors("AllowAllOrigins");
 
 const string welcomeMessage = "AspAPI - WorldSkills 2026 BaseProject v0.0.1";
 
+// ##### IDP MOCK ENDPOINTS #####
+
+app.MapPost("/api/authentication/login", ([FromBody] JsonElement? body) => {
+    if (!body.HasValue) return Results.BadRequest();
+
+    string? username = body.Value!.TryGetProperty("username", out var _usernameProperty)
+        ? _usernameProperty.ValueKind == JsonValueKind.String ? _usernameProperty.GetString() : null
+        : null;
+    string? password = body.Value!.TryGetProperty("password", out var _passwordProperty)
+        ? _passwordProperty.ValueKind == JsonValueKind.String ? _passwordProperty.GetString() : null
+        : null;
+
+    var user = GlobalData.users.Where(x => x.Info.Username == username && x.Password == password).FirstOrDefault();
+    if (user == null) return Results.Unauthorized();
+
+    var header = Utils.Base64UrlEncode(JsonSerializer.Serialize(new {
+        alg = "HS256",
+        typ = "JWT"
+    }));
+    var payload = Utils.Base64UrlEncode(JsonSerializer.Serialize(new {
+        iat = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+        sub = user.Info.Id,
+        name = user.Info.Username,
+        roles = user.Info.Roles
+    }));
+
+    var message = $"{header}.{payload}";
+    var signature = Utils.CreateSignature(message, "skills");
+
+    var jwt = $"{message}.{signature}";
+    return Results.Ok(jwt);
+});
+
+app.MapGet("/api/authentication/info", ([FromHeader] string Authorization = "") => {
+    if (!Authorization.StartsWith("Bearer ")) return Results.Unauthorized();
+    var token = Authorization.Split(" ")[1];
+
+
+    var tokenParts = token.Split(".");
+    if (tokenParts.Length != 3) return Results.Unauthorized();
+    string header = tokenParts[0], payload = tokenParts[1], signature = tokenParts[2];
+
+    var message = $"{header}.{payload}";
+    var correctSignature = Utils.CreateSignature(message, "skills");
+
+    if (signature != correctSignature) return Results.Unauthorized();
+    var payloadObj = JsonSerializer.Deserialize<JwtPayload>(Utils.Base64UrlDecode(payload));
+
+    return Results.Ok(new UserInfo(
+        Id: payloadObj?.Sub ?? "",
+        Username: payloadObj?.Name ?? "",
+        Roles: payloadObj?.Roles ?? []
+    ));
+});
+
+app.MapGet("/api/users/{userId}", (string userId) => {
+    var user = GlobalData.users.Where(x => x.Info.Id == userId).FirstOrDefault();
+    if (user == null) return Results.NotFound();
+
+    return Results.Ok(new CrmUserDetails(user.Info.Id, user.PartnerId));
+});
+
+app.MapGet("/api/products/partner", (string partnerId) => {
+    var products = GlobalData.partnerProducts.GetValueOrDefault(partnerId);
+
+    if (products == null) return Results.NotFound();
+
+    return Results.Ok(products);
+});
+
 // ##### ENDPOINTS & UTILS #####
 
 app.MapGet("/", () => new WelcomeResponse {
@@ -43,7 +111,7 @@ app.MapGet("/db-test", async (DbContext db, HttpContext context) => {
     UserInfo? user;
     try {
         hc.DefaultRequestHeaders.Add("Authorization", $"{context.Request.Headers.Authorization.FirstOrDefault()}");
-        user = await hc.GetFromJsonAsync<UserInfo?>("http://idp.skills.lan/api/authentication/info");
+        user = await hc.GetFromJsonAsync<UserInfo?>($"{app.Urls.FirstOrDefault()?.Replace("0.0.0.0", "localhost")}/api/authentication/info");
     } catch {
         return Results.Unauthorized();
     }
@@ -59,13 +127,13 @@ app.MapGet("/api/products", async ([FromHeader] string Authorization = "") => {
     UserInfo? user;
     try {
         hc.DefaultRequestHeaders.Add("Authorization", Authorization);
-        user = await hc.GetFromJsonAsync<UserInfo?>("http://idp.skills.lan/api/authentication/info");
-    } catch {
+        user = await hc.GetFromJsonAsync<UserInfo?>($"{app.Urls.FirstOrDefault()?.Replace("0.0.0.0", "localhost")}/api/authentication/info");
+    } catch (Exception e) {
+        Console.WriteLine(app.Urls.FirstOrDefault("null") ?? "null", e);
         return Results.Unauthorized();
     }
-    var userDetails = await hc.GetFromJsonAsync<CrmUserDetails>($"http://crm.skills.lan/api/users/{user?.Id}");
-    var crmProducts = await hc.GetFromJsonAsync<CrmProduct[]>($"http://crm.skills.lan/api/products/partner?partnerId={userDetails?.PartnerId}");
-
+    var userDetails = await hc.GetFromJsonAsync<CrmUserDetails>($"{app.Urls.FirstOrDefault()?.Replace("0.0.0.0", "localhost")}/api/users/{user?.Id}");
+    var crmProducts = await hc.GetFromJsonAsync<CrmProduct[]>($"{app.Urls.FirstOrDefault()?.Replace("0.0.0.0", "localhost")}/api/products/partner?partnerId={userDetails?.PartnerId}");
 
     return Results.Ok(crmProducts?.Select(product => new {
         product.Id,

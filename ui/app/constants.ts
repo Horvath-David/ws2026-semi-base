@@ -1,1 +1,1 @@
-export const API_URL = "http://bo.skills.lan/api"
+export const API_URL = "http://localhost:8989/api";
